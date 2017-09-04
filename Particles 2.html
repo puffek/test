@@ -232,7 +232,36 @@
 				}
 
 			}
+ var deviceTop = 0;
+  var deviceLeft = 0;
+    function handleOrientation(event) {
+  var deviceX = event.beta;  // In degree in the range [-180,180]
+  var deviceY = event.gamma; // In degree in the range [-90,90]
+  var maxDeviceX = window.innerWidth/2;
+  var maxDeviceY = window.innerHeight/2;
+  
+ // output.innerHTML  = "beta : " + x + "\n";
+ // output.innerHTML += "gamma: " + y + "\n";
 
+  // Because we don't want to have the device upside down
+  // We constrain the x value to the range [-90,90]
+  if (deviceX >  90) { x =  90};
+  if (deviceY < -90) { x = -90};
+
+  // To make computation easier we shift the range of 
+  // x and y to [0,180]
+  deviceX += 90;
+  deviceY += 90;
+
+  // 10 is half the size of the ball
+  // It center the positioning point to the center of the ball
+  deviceTop  = (maxDeviceX*deviceX/180);
+  deviceLeft = (maxDeviceY*deviceY/180);
+}
+        
+window.addEventListener('deviceorientation', handleOrientation);
+			
+			
 			function onDocumentMouseMove(event) {
 
 				event.preventDefault();
@@ -320,10 +349,20 @@
 
 				attributes.size.needsUpdate = true;
 				uniforms.time.value += 0.03;
+				
+var ua = navigator.userAgent;
 
-				tomouseX += (mouseX-tomouseX)/30;
-				tomouseY += (mouseY-tomouseY)/30;
-
+  if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua)) {
+  tomouseX += (deviceLeft-tomouseX);
+  tomouseY += (deviceTop-tomouseY)*2;
+} else if(/Chrome/i.test(ua)) {
+ tomouseX += (mouseX-tomouseX)/30;
+ tomouseY += (mouseY-tomouseY)/30;
+} else {
+  tomouseX += (mouseX-tomouseX)/30;
+  tomouseY += (mouseY-tomouseY)/30;
+}
+                
 				particles.rotation.x = tomouseY/1000;
 				particles.rotation.y = extraRotation.value+(tomouseX/800);
 
