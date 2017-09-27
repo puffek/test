@@ -28,13 +28,13 @@ THREEx.WindowResize	= function(renderer, camera){
 		// notify the renderer of the size change
         var ua = navigator.userAgent;
         if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua)) {
-          renderer.setSize( window.innerWidth, window.innerHeight + 63);
+          renderer.setSize( screen.availWidth, screen.availWidth);
         } else {
-            renderer.setSize( window.innerWidth, window.innerHeight);
+            renderer.setSize( screen.availWidth, screen.availWidth);
         }
 		
 		// update the camera
-		camera.aspect	= window.innerWidth / window.innerHeight;
+		camera.aspect	= screen.availWidth / screen.availWidth;
 		camera.updateProjectionMatrix();
 	}
 	// bind the resize event
